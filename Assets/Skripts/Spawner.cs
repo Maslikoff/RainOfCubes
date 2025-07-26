@@ -4,20 +4,25 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private CubePool _cubePool;
     [SerializeField] private float _spawnInterval = .5f;
     [SerializeField] private float _spawnHeight = 15f;
     [SerializeField] private float _spawnAreaSize = 10f;
 
-    private float _timer;
+    private bool _isRaining = true;
 
-    private void Update()
+    private void Start()
     {
-        _timer += Time.deltaTime;
+        StartCoroutine(SpawnCubesRoutine());
+    }
 
-        if (_timer >= _spawnInterval)
+    private IEnumerator SpawnCubesRoutine()
+    {
+        while (_isRaining)
         {
             SpawnCube();
-            _timer = 0f;
+
+            yield return new WaitForSeconds(_spawnInterval);
         }
     }
 
@@ -29,7 +34,7 @@ public class Spawner : MonoBehaviour
             Random.Range(-_spawnAreaSize, _spawnAreaSize)
         );
 
-        GameObject cube = CubePool.Instance.GetCube();
+        GameObject cube = _cubePool.GetCube();
         cube.transform.position = spawnPosition;
         cube.GetComponent<CubeBehavior>().ResetCube();
     }

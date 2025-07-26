@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 227706175}
   - component: {fileID: 227706174}
   - component: {fileID: 227706173}
+  - component: {fileID: 227706177}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Platform
@@ -228,6 +229,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &227706177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227706172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7cfa074374635b44bdafe003ffa62ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &493091263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -645,6 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5582f98e19477549b3b51a9264dd7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cubePool: {fileID: 1626984476}
   _spawnInterval: 0.5
   _spawnHeight: 15
   _spawnAreaSize: 15

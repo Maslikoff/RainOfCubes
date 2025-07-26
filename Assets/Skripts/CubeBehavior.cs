@@ -1,17 +1,17 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CubeBehavior : MonoBehaviour
 {
+    public event Action OnReturnToPool;
+
     [SerializeField] private Color _initialColor = Color.blue;
     [SerializeField] private Color _touchedColor = Color.red;
     [SerializeField] private Vector2 _rangeLife = new Vector2(2, 5);
 
     private Renderer _renderer;
     private bool _hasTouchedPlatform = false;
-    private float _lifeTime;
-    private float _timeSinceTouch;
 
     private void Awake()
     {
@@ -24,27 +24,28 @@ public class CubeBehavior : MonoBehaviour
     {
         _renderer.material.color = _initialColor;
         _hasTouchedPlatform = false;
-        _timeSinceTouch = 0;
-    }
-
-    private void Update()
-    {
-        if (_hasTouchedPlatform) 
-        { 
-            _timeSinceTouch += Time.deltaTime;
-
-            if(_timeSinceTouch >= _lifeTime)
-                CubePool.Instance.ReturnCube(gameObject);
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Platform") && _hasTouchedPlatform == false)
+        if (_hasTouchedPlatform) 
+            return;
+
+        if (collision.gameObject.TryGetComponent<Platform>(out _))
         {
             _hasTouchedPlatform = true;
             _renderer.material.color = _touchedColor;
-            _lifeTime = Random.Range(_rangeLife.x, _rangeLife.y);
+
+            StartCoroutine(CountdownToReturn());
         }
+    }
+
+    private IEnumerator CountdownToReturn()
+    {
+        float lifetime = UnityEngine.Random.Range(_rangeLife.x, _rangeLife.y);
+
+        yield return new WaitForSeconds(lifetime);
+
+        OnReturnToPool?.Invoke();
     }
 }

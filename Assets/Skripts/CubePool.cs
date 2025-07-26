@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CubePool : MonoBehaviour
 {
-    public static CubePool Instance;
-
     [SerializeField] private GameObject _cubePrefab;
     [SerializeField] private int _initialPoolSixe = 20;
 
@@ -13,7 +11,6 @@ public class CubePool : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         InitializePool();
     }
 
@@ -40,10 +37,13 @@ public class CubePool : MonoBehaviour
             InitCube();
     }
 
-    private void InitCube()
+    private GameObject InitCube()
     {
         GameObject cube = Instantiate(_cubePrefab);
         cube.SetActive(false);
+        cube.GetComponent<CubeBehavior>().OnReturnToPool += () => ReturnCube(cube);
         _pooledCubes.Enqueue(cube);
+
+        return cube;
     }
 }
