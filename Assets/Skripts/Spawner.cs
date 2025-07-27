@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -29,13 +28,13 @@ public class Spawner : MonoBehaviour
     private void SpawnCube()
     {
         Vector3 spawnPosition = new Vector3(
-               Random.Range(-_spawnAreaSize, _spawnAreaSize),
+            Random.Range(-_spawnAreaSize, _spawnAreaSize),
             _spawnHeight,
             Random.Range(-_spawnAreaSize, _spawnAreaSize)
         );
 
-        GameObject cube = _cubePool.GetCube();
+        CubeBehavior cube = _cubePool.GetCube();
         cube.transform.position = spawnPosition;
-        cube.GetComponent<CubeBehavior>().ResetCube();
+        cube.ResetCube();
     }
 }

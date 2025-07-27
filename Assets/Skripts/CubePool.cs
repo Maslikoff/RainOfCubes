@@ -1,33 +1,32 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CubePool : MonoBehaviour
 {
-    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private CubeBehavior _cubePrefab;
     [SerializeField] private int _initialPoolSixe = 20;
 
-    private Queue<GameObject> _pooledCubes = new Queue<GameObject>();
+    private Queue<CubeBehavior> _pooledCubes = new Queue<CubeBehavior>();
 
     private void Awake()
     {
         InitializePool();
     }
 
-    public GameObject GetCube()
+    public CubeBehavior GetCube()
     {
         if (_pooledCubes.Count == 0)
-            InitCube();
+            return InitCube();
 
-        GameObject newCube = _pooledCubes.Dequeue();
-        newCube.SetActive(true);
+        CubeBehavior newCube = _pooledCubes.Dequeue();
+        newCube.gameObject.SetActive(true);
 
         return newCube;
     }
 
-    public void ReturnCube(GameObject cube)
+    public void ReturnCube(CubeBehavior cube)
     {
-        cube.SetActive(false);
+        cube.gameObject.SetActive(false);
         _pooledCubes.Enqueue(cube);
     }
 
@@ -37,11 +36,12 @@ public class CubePool : MonoBehaviour
             InitCube();
     }
 
-    private GameObject InitCube()
+    private CubeBehavior InitCube()
     {
-        GameObject cube = Instantiate(_cubePrefab);
-        cube.SetActive(false);
-        cube.GetComponent<CubeBehavior>().OnReturnToPool += () => ReturnCube(cube);
+        CubeBehavior cube = Instantiate(_cubePrefab);
+        cube.gameObject.SetActive(false);
+        cube.transform.SetParent(transform);
+        cube.SetPool(this);
         _pooledCubes.Enqueue(cube);
 
         return cube;

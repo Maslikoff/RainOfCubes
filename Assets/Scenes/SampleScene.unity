@@ -674,7 +674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41401b5795fc47429ba4838c5be4a6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubePrefab: {fileID: 3966442719766365667, guid: c1d1405e369de60428557a87a61ae56d, type: 3}
+  _cubePrefab: {fileID: -7594220662721350421, guid: c1d1405e369de60428557a87a61ae56d, type: 3}
   _initialPoolSixe: 20
 --- !u!1 &1937763713
 GameObject:
