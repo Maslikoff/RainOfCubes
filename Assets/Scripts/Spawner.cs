@@ -8,20 +8,23 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _spawnHeight = 15f;
     [SerializeField] private float _spawnAreaSize = 10f;
 
+    private WaitForSeconds _spawnWait;
     private bool _isRaining = true;
 
     private void Start()
     {
+        _spawnWait = new WaitForSeconds(_spawnInterval);
+
         StartCoroutine(SpawnCubesRoutine());
     }
 
     private IEnumerator SpawnCubesRoutine()
     {
-        yield return new WaitForSeconds(_spawnInterval);
-
         while (_isRaining)
         {
             SpawnCube();
+
+            yield return _spawnWait;
         }
     }
 
