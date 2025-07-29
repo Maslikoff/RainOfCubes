@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
     [SerializeField] private Color _initialColor = Color.blue;
     [SerializeField] private Color _touchedColor = Color.red;
     [SerializeField] private Vector2 _rangeLife = new Vector2(2, 5);
 
+    private Rigidbody _rigidbody;
     private Renderer _renderer;
     private Quaternion _initialRotation;
     private bool _hasTouchedPlatform = false;
@@ -17,6 +19,7 @@ public class Cube : MonoBehaviour
 
     private void Awake()
     {
+        _rigidbody = GetComponent<Rigidbody>();
         _renderer = GetComponent<Renderer>();
 
         _initialRotation = transform.rotation;
@@ -41,8 +44,13 @@ public class Cube : MonoBehaviour
     public void ResetCube()
     {
         _renderer.material.color = _initialColor;
-        transform.rotation = _initialRotation;
         _hasTouchedPlatform = false;
+
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+        _rigidbody.Sleep();
+
+        transform.rotation = _initialRotation;
     }
 
     private IEnumerator CountdownToReturn()
