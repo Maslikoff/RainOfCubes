@@ -17,24 +17,35 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnCubesRoutine()
     {
+        yield return new WaitForSeconds(_spawnInterval);
+
         while (_isRaining)
         {
             SpawnCube();
-
-            yield return new WaitForSeconds(_spawnInterval);
         }
     }
 
     private void SpawnCube()
     {
-        Vector3 spawnPosition = new Vector3(
+        Cube cube = _cubePool.GetCube();
+        cube.OnCubeExpired += HandleCubeExpired;
+
+        cube.transform.position = GetRandomSpawnPosition();
+        cube.ResetCube();
+    }
+
+    private Vector3 GetRandomSpawnPosition()
+    {
+        return new Vector3(
             Random.Range(-_spawnAreaSize, _spawnAreaSize),
             _spawnHeight,
             Random.Range(-_spawnAreaSize, _spawnAreaSize)
         );
+    }
 
-        CubeBehavior cube = _cubePool.GetCube();
-        cube.transform.position = spawnPosition;
-        cube.ResetCube();
+    private void HandleCubeExpired(Cube cube)
+    {
+        cube.OnCubeExpired -= HandleCubeExpired;
+        _cubePool.ReturnCube(cube);
     }
 }
