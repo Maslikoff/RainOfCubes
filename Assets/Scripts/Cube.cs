@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    public event Action<Cube> OnCubeTouchedPlatform;
-    public event Action<Cube> OnCubeExpired;
-
     [SerializeField] private Color _initialColor = Color.blue;
     [SerializeField] private Color _touchedColor = Color.red;
     [SerializeField] private Vector2 _rangeLife = new Vector2(2, 5);
 
     private Renderer _renderer;
+    private Quaternion _initialRotation;
     private bool _hasTouchedPlatform = false;
+
+    public event Action<Cube> CubeTouchedPlatform;
+    public event Action<Cube> CubeExpired;
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
+
+        _initialRotation = transform.rotation;
 
         ResetCube();
     }
@@ -26,10 +29,11 @@ public class Cube : MonoBehaviour
         if (_hasTouchedPlatform || collision.gameObject.TryGetComponent<Platform>(out _) == false)
             return;
 
+
         _hasTouchedPlatform = true;
         _renderer.material.color = _touchedColor;
 
-        OnCubeTouchedPlatform?.Invoke(this);
+        CubeTouchedPlatform?.Invoke(this);
 
         StartCoroutine(CountdownToReturn());
     }
@@ -37,6 +41,7 @@ public class Cube : MonoBehaviour
     public void ResetCube()
     {
         _renderer.material.color = _initialColor;
+        transform.rotation = _initialRotation;
         _hasTouchedPlatform = false;
     }
 
@@ -46,6 +51,6 @@ public class Cube : MonoBehaviour
 
         yield return new WaitForSeconds(lifetime);
 
-        OnCubeExpired?.Invoke(this);
+        CubeExpired?.Invoke(this);
     }
 }

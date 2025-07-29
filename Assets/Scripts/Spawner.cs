@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour
     private void SpawnCube()
     {
         Cube cube = _cubePool.GetCube();
-        cube.OnCubeExpired += HandleCubeExpired;
+        cube.CubeExpired += OnHandleCubeExpired;
 
         cube.transform.position = GetRandomSpawnPosition();
         cube.ResetCube();
@@ -46,9 +46,9 @@ public class Spawner : MonoBehaviour
         );
     }
 
-    private void HandleCubeExpired(Cube cube)
+    private void OnHandleCubeExpired(Cube cube)
     {
-        cube.OnCubeExpired -= HandleCubeExpired;
+        cube.CubeExpired -= OnHandleCubeExpired;
         _cubePool.ReturnCube(cube);
     }
 }
