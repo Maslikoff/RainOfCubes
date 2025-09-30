@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
@@ -12,6 +14,8 @@ public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
     public int TotalSpawned { get; protected set; } = 0;
     public int TotalCreated { get; protected set; } = 0;
     public int ActiveCount => TotalSpawned - PooledObjects.Count;
+
+    public event Action<int, int, int> StatisticsChanged;
 
     private void Awake()
     {
@@ -27,6 +31,8 @@ public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
         obj.gameObject.SetActive(true);
         TotalSpawned++;
 
+        StatisticsChanged?.Invoke(TotalSpawned, TotalCreated, ActiveCount);
+
         return obj;
     }
 
@@ -35,6 +41,8 @@ public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
         obj.gameObject.SetActive(false);
         ResetObject(obj);
         PooledObjects.Enqueue(obj);
+
+        StatisticsChanged?.Invoke(TotalSpawned, TotalCreated, ActiveCount);
     }
 
     protected virtual void InitializePool()
@@ -49,6 +57,8 @@ public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
         obj.gameObject.SetActive(false);
         PooledObjects.Enqueue(obj);
         TotalCreated++;
+
+        StatisticsChanged?.Invoke(TotalSpawned, TotalCreated, ActiveCount);
     }
 
     protected abstract void ResetObject(T obj);

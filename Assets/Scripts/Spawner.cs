@@ -10,16 +10,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _spawnHeight = 15f;
     [SerializeField] private float _spawnAreaSize = 10f;
 
-    [Header("UI - Cubes")]
-    [SerializeField] private TextMeshProUGUI _cubesTotalSpawnedText;
-    [SerializeField] private TextMeshProUGUI _cubesTotalCreatedText;
-    [SerializeField] private TextMeshProUGUI _cubesActiveCountText;
-
-    [Header("UI - Bombs")]
-    [SerializeField] private TextMeshProUGUI _bombsTotalSpawnedText;
-    [SerializeField] private TextMeshProUGUI _bombsTotalCreatedText;
-    [SerializeField] private TextMeshProUGUI _bombsActiveCountText;
-
     private WaitForSeconds _spawnWait;
     private bool _isRaining = true;
 
@@ -28,11 +18,6 @@ public class Spawner : MonoBehaviour
         _spawnWait = new WaitForSeconds(_spawnInterval);
 
         StartCoroutine(SpawnCubesRoutine());
-    }
-
-    private void Update()
-    {
-        UpdateStatistics();
     }
 
     private IEnumerator SpawnCubesRoutine()
@@ -90,16 +75,5 @@ public class Spawner : MonoBehaviour
     private void OnCreateBombAtPosition(Vector3 position)
     {
         SpawnBomb(position);
-    }
-
-    private void UpdateStatistics()
-    {
-        _cubesTotalSpawnedText.text = $"Total Spawned: {_cubePool.TotalSpawned}";
-        _cubesTotalCreatedText.text = $"Total Created: {_cubePool.TotalCreated}";
-        _cubesActiveCountText.text = $"Active: {-_cubePool.ActiveCount}";
-
-        _bombsTotalSpawnedText.text = $"Total Spawned: {_bombPool.TotalSpawned}";
-        _bombsTotalCreatedText.text = $"Total Created: {_bombPool.TotalCreated}";
-        _bombsActiveCountText.text = $"Active: {-_bombPool.ActiveCount}";
     }
 }
