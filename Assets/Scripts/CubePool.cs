@@ -1,9 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubePool : MonoBehaviour
+public class CubePool : ObjectPool<Cube>
 {
-    [SerializeField] private Cube _cubePrefab;
+    protected override void ResetObject(Cube cube)
+    {
+        cube.ResetCube();
+    }
+
+    /*[SerializeField] private Cube _cubePrefab;
     [SerializeField] private int _initialPoolSixe = 20;
 
     private Queue<Cube> _pooledCubes = new Queue<Cube>();
@@ -42,5 +47,5 @@ public class CubePool : MonoBehaviour
         Cube cube = Instantiate(_cubePrefab);
         cube.gameObject.SetActive(false);
         _pooledCubes.Enqueue(cube);
-    }
+    }*/
 }
