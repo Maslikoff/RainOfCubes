@@ -14,11 +14,10 @@ public class Cube : MonoBehaviour
     private Quaternion _initialRotation;
 
     private bool _hasTouchedPlatform = false;
-    [SerializeField] private bool _shouldSpawnBomb = false;
 
     public event Action<Cube> CubeTouchedPlatform;
     public event Action<Cube> CubeExpired;
-    public event Action<Vector3> CheckAndCreateBomb;
+    public event Action<Vector3> TestingAndBuildingBomb;
 
 
     private void Awake()
@@ -33,18 +32,13 @@ public class Cube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (_hasTouchedPlatform)
+        if (_hasTouchedPlatform || collision.gameObject.TryGetComponent<Platform>(out _) == false)
             return;
-
-        bool hasPlatform = collision.gameObject.TryGetComponent<Platform>(out _);
-        bool hasIrritantBomb = collision.gameObject.TryGetComponent<IrritantBomb>(out _);
 
         _hasTouchedPlatform = true;
         _renderer.material.color = _touchedColor;
-        _shouldSpawnBomb = hasIrritantBomb;
 
         CubeTouchedPlatform?.Invoke(this);
-
         StartCoroutine(CountdownToReturn());
     }
 
@@ -66,8 +60,7 @@ public class Cube : MonoBehaviour
 
         yield return new WaitForSeconds(lifetime);
 
-        if (_shouldSpawnBomb)
-            CheckAndCreateBomb?.Invoke(transform.position);
+        TestingAndBuildingBomb?.Invoke(transform.position);
 
         CubeExpired?.Invoke(this);
     }

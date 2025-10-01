@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ExplosionEffect : MonoBehaviour
@@ -10,10 +8,10 @@ public class ExplosionEffect : MonoBehaviour
 
         foreach (Collider hit in colliders)
         {
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
+            Rigidbody rigidbody = hit.GetComponent<Rigidbody>();
 
-            if (rb != null)
-                rb.AddExplosionForce(force, position, radius, 1f, ForceMode.Impulse);
+            if (rigidbody != null)
+                rigidbody.AddExplosionForce(force, position, radius, 1f, ForceMode.Impulse);
         }
     }
 }
